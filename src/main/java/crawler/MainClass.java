@@ -25,7 +25,7 @@ public class MainClass {
         int numberofcrawlers = 8;
         CrawlConfig config = new CrawlConfig();
         config.setMaxPagesToFetch(n);
-        config.setCrawlStorageFolder("/datast/");
+        config.setCrawlStorageFolder("./datast/");
 
         PageFetcher pageFetcher = new PageFetcher(config);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();

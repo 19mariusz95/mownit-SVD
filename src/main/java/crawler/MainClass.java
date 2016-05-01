@@ -18,7 +18,7 @@ import java.util.Set;
  * Created by Mariusz on 01.05.2016.
  */
 public class MainClass {
-    public static Set<String> set = new HashSet<String>();
+    static Set<String> set = new HashSet<>();
 
     public static void main(String[] args) throws Exception {
         int n = Integer.parseInt(args[0]);
@@ -38,7 +38,7 @@ public class MainClass {
         crawlController.waitUntilFinish();
 
         List<Object> crawlersLocalData = crawlController.getCrawlersLocalData();
-        List<Document> documents = new ArrayList<Document>();
+        List<Document> documents = new ArrayList<>();
         crawlersLocalData.forEach(f -> {
             Set<Document> set = (Set<Document>) f;
             set.forEach(documents::add);
@@ -51,8 +51,13 @@ public class MainClass {
         pw.println(set.size());
         for (String term : set) {
             pw.print(term + " ");
-            for (Document doc : documents) {
-                pw.print(doc.getMap().getOrDefault(term, 0) + " ");
+            for (int i = 0; i < documents.size(); i++) {
+                Document doc = documents.get(i);
+                int val = doc.getMap().getOrDefault(term, 0);
+                if (val > 0) {
+                    String string = i + ":" + val;
+                    pw.print(string + " ");
+                }
             }
             pw.println();
         }

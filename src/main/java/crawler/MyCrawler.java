@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  */
 public class MyCrawler extends WebCrawler {
     private Pattern filters = Pattern.compile(".*(\\.(css|js|gif|jpg" + "|png|mp3|mp3|zip|gz))$");
-    private Set<Document> pagestext = new HashSet<Document>();
+    private Set<Document> pagestext = new HashSet<>();
 
     @Override
     public void visit(Page page) {
@@ -26,7 +26,7 @@ public class MyCrawler extends WebCrawler {
         if (htmlParseData instanceof HtmlParseData) {
             System.out.println("URL: " + url);
             String text = ((HtmlParseData) htmlParseData).getText();
-            Map<String, Integer> map = new HashMap<String, Integer>();
+            Map<String, Integer> map = new HashMap<>();
             String[] array = text.toLowerCase().split(" ");
             for (String s : array) {
                 String tmp = s.trim();

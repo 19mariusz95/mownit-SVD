@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class Document {
     private String url;
-    private Map<String, Integer> map = new HashMap<String, Integer>();
+    private Map<String, Integer> map = new HashMap<>();
 
     public Document(String url, Map<String, Integer> map) {
         this.url = url;

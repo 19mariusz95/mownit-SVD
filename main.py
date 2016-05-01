@@ -52,3 +52,17 @@ for i in range(0, n):
 
 print("data loaded")
 inverse_document_frequency(A, docn, n)
+
+print("enter words")
+
+input_line = input()
+
+input_line = input_line.split(" ")
+
+q = [0] * n
+for str in input_line:
+    try:
+        ind = words.index(str)
+        q[ind] += 1
+    except ValueError:
+        pass

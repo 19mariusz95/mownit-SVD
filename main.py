@@ -1,9 +1,11 @@
-from scipy.sparse import dok_matrix
 from math import log
 from math import pow
 from math import sqrt
-from scipy.sparse.linalg import svds
+
+import matplotlib.pyplot as plt
 import numpy as nmp
+from scipy.sparse import dok_matrix
+from scipy.sparse.linalg import svds
 
 
 def norm(A, n, docn, q):
@@ -75,6 +77,7 @@ def inverse_document_frequency(A, docn, n):
         A[val] = 0.0
     print("inverse document frequency done")
 
+
 file = open("data.txt", "r")
 
 docn = int(file.readline())
@@ -85,8 +88,6 @@ urls = []
 
 for i in range(0, docn):
     urls.append(file.readline())
-
-print(urls)
 
 n = int(file.readline())
 
@@ -108,7 +109,10 @@ for i in range(0, n):
         A[i, dok] = cnt
 
 print("data loaded")
+Aprim = A.copy()
+
 inverse_document_frequency(A, docn, n)
+print("idf done")
 
 print("enter words")
 
@@ -125,8 +129,22 @@ for spstr in input_line:
         pass
 
 norm(A, n, docn, q)
-
+norm(Aprim, n, docn, q)
+print("normalization done")
 cosphij2 = get_cor2(A, n, docn, q)
+cosphij2prim = get_cor2(Aprim, n, docn, q)
+
+cosdivcos = [0.0] * docn
+
+for j in range(0, docn):
+    try:
+        cosdivcos[j] = cosphij2[j] / cosphij2prim[j]
+    except ZeroDivisionError:
+        cosdivcos[j] = 1.0
+
+plt.plot(range(0, docn), cosphij2prim, range(0, docn), cosphij2)
+plt.plot(range(0, docn), cosdivcos)
+plt.show()
 
 tuples = []
 for i in range(0, docn):
@@ -137,11 +155,24 @@ tuples = sorted(tuples, key=lambda x: x[1], reverse=True)
 for i in range(0, 5):
     print(urls[tuples[i][0]], " ", tuples[i][1])
 
-k = 5
-svd_res = svds(A, k=k)
-A.clear()
-Ak = nmp.matrix(svd_res[0]) * nmp.diag(svd_res[1]) * nmp.matrix(svd_res[2])
+print("enter k value")
+k = int(input())
+print("svd - read or count? - r/c")
+str = input()
+while str != "r" and str != "c":
+    str = input()
+if str == "r":
+    filesvd = open("svd" + str(k) + ".txt", "r")
 
+else:
+    svd_res = svds(A, k=k)
+    A.clear()
+    Ak = nmp.matrix(svd_res[0]) * nmp.diag(svd_res[1]) * nmp.matrix(svd_res[2])
+    filesvd = open("svd" + str(k) + ".txt", "w")
+    for i in range(0, n):
+        for j in range(0, docn):
+            filesvd.write(str(Ak[i, j]) + " ")
+        filesvd.write("\n")
 cosphij3 = get_cor3(Ak, n, docn, q)
 print()
 tuples = []

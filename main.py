@@ -117,8 +117,7 @@ print("idf done")
 print("enter words")
 
 input_line = input()
-
-input_line = input_line.split(" ")
+input_line = input_line.lower().split(" ")
 
 q = [0] * n
 for spstr in input_line:
@@ -134,16 +133,9 @@ print("normalization done")
 cosphij2 = get_cor2(A, n, docn, q)
 cosphij2prim = get_cor2(Aprim, n, docn, q)
 
-cosdivcos = [0.0] * docn
-
-for j in range(0, docn):
-    try:
-        cosdivcos[j] = cosphij2[j] / cosphij2prim[j]
-    except ZeroDivisionError:
-        cosdivcos[j] = 1.0
-
-plt.plot(range(0, docn), cosphij2prim, range(0, docn), cosphij2)
-plt.plot(range(0, docn), cosdivcos)
+plt.plot(range(0, docn), cosphij2prim)
+plt.show()
+plt.plot(range(0, docn), cosphij2)
 plt.show()
 
 tuples = []
@@ -157,22 +149,11 @@ for i in range(0, 5):
 
 print("enter k value")
 k = int(input())
-print("svd - read or count? - r/c")
-stri = input()
-while stri != "r" and stri != "c":
-    stri = input()
-if stri == "r":
-    filesvd = open("svd" + str(k) + ".txt", "r")
 
-else:
-    svd_res = svds(A, k=k)
-    A.clear()
-    Ak = nmp.matrix(svd_res[0]) * nmp.diag(svd_res[1]) * nmp.matrix(svd_res[2])
-    filesvd = open("svd" + str(k) + ".txt", "w")
-    for i in range(0, n):
-        for j in range(0, docn):
-            filesvd.write(str(Ak[i, j]) + " ")
-        filesvd.write("\n")
+svd_res = svds(A, k=k)
+A.clear()
+Ak = nmp.matrix(svd_res[0]) * nmp.diag(svd_res[1]) * nmp.matrix(svd_res[2])
+
 cosphij3 = get_cor3(Ak, n, docn, q)
 
 plt.plot(range(0, docn), cosphij3)

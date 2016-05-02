@@ -149,8 +149,12 @@ for i in range(0, 5):
 
 print("enter k value")
 k = int(input())
-
-svd_res = svds(A, k=k)
+print("with idf or no 0/1")
+yn = int(input())
+if yn == 1:
+    svd_res = svds(A, k=k)
+else:
+    svd_res = svds(Aprim, k=k)
 A.clear()
 Ak = nmp.matrix(svd_res[0]) * nmp.diag(svd_res[1]) * nmp.matrix(svd_res[2])
 

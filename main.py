@@ -158,10 +158,10 @@ for i in range(0, 5):
 print("enter k value")
 k = int(input())
 print("svd - read or count? - r/c")
-str = input()
-while str != "r" and str != "c":
-    str = input()
-if str == "r":
+stri = input()
+while stri != "r" and stri != "c":
+    stri = input()
+if stri == "r":
     filesvd = open("svd" + str(k) + ".txt", "r")
 
 else:

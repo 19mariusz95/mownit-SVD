@@ -134,8 +134,10 @@ cosphij2 = get_cor2(A, n, docn, q)
 cosphij2prim = get_cor2(Aprim, n, docn, q)
 
 plt.plot(range(0, docn), cosphij2prim)
+plt.title("correlation before IDF")
 plt.show()
 plt.plot(range(0, docn), cosphij2)
+plt.title("correlation after IDF")
 plt.show()
 
 tuples = []

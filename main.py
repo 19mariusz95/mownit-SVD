@@ -2,6 +2,8 @@ from scipy.sparse import dok_matrix
 from math import log
 from math import pow
 from math import sqrt
+from scipy.sparse.linalg import svds
+import numpy as nmp
 
 
 def norm(A, n, docn, q):
@@ -18,6 +20,19 @@ def norm(A, n, docn, q):
         ndj[i] = sqrt(ndj[i])
     for value in A.keys():
         A[value] /= ndj[value[1]]
+
+
+def get_cor3(Ak, n, docn, q):
+    cos = [0.0] * docn
+    for j in range(0, docn):
+        sum = 0.0
+        ndj = 0.0
+        for i in range(0, n):
+            sum += q[i] * Ak[i, j]
+            ndj += pow(Ak[i, j], 2)
+        ndj = sqrt(ndj)
+        cos[j] = sum / ndj
+    return cos
 
 
 def get_cor2(A, n, docn, q):
@@ -109,13 +124,31 @@ for spstr in input_line:
     except ValueError:
         pass
 
-cosphij = get_cor(A, n, docn, q)
-
-#
-print(cosphij)
-
 norm(A, n, docn, q)
 
 cosphij2 = get_cor2(A, n, docn, q)
 
-print(cosphij2)
+tuples = []
+for i in range(0, docn):
+    tuples.append([i, cosphij2[i]])
+
+tuples = sorted(tuples, key=lambda x: x[1], reverse=True)
+
+for i in range(0, 5):
+    print(urls[tuples[i][0]], " ", tuples[i][1])
+
+k = 5
+svd_res = svds(A, k=k)
+A.clear()
+Ak = nmp.matrix(svd_res[0]) * nmp.diag(svd_res[1]) * nmp.matrix(svd_res[2])
+
+cosphij3 = get_cor3(Ak, n, docn, q)
+print()
+tuples = []
+for i in range(0, docn):
+    tuples.append([i, cosphij3[i]])
+
+tuples = sorted(tuples, key=lambda x: x[1], reverse=True)
+
+for i in range(0, 5):
+    print(urls[tuples[i][0]], " ", tuples[i][1])

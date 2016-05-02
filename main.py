@@ -174,6 +174,10 @@ else:
             filesvd.write(str(Ak[i, j]) + " ")
         filesvd.write("\n")
 cosphij3 = get_cor3(Ak, n, docn, q)
+
+plt.plot(range(0, docn), cosphij3)
+plt.show()
+
 print()
 tuples = []
 for i in range(0, docn):

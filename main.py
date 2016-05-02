@@ -1,5 +1,47 @@
 from scipy.sparse import dok_matrix
 from math import log
+from math import pow
+from math import sqrt
+
+
+def norm(A, n, docn, q):
+    nq = 0.0
+    for i in range(0, n):
+        nq += pow(q[i], 2)
+    nq = sqrt(nq)
+    for i in range(0, n):
+        q[i] /= nq
+    ndj = [0.0] * docn
+    for value in A.keys():
+        ndj[value[1]] += pow(A[value], 2)
+    for i in range(0, docn):
+        ndj[i] = sqrt(ndj[i])
+    for value in A.keys():
+        A[value] /= ndj[value[1]]
+
+
+def get_cor2(A, n, docn, q):
+    cos = [0.0] * docn
+    for value in A.keys():
+        cos[value[1]] += q[value[0]] * A[value]
+    return cos
+
+
+def get_cor(A, n, docn, q):
+    cos = [0.0] * docn
+    nq = 0.0
+    ndj = [0.0] * docn
+    numerator = [0] * n
+    for i in range(0, n):
+        nq += pow(q[i], 2)
+    nq = sqrt(nq)
+    for value in A.keys():
+        ndj[value[1]] += pow(A[value], 2)
+        numerator[value[1]] += q[value[0]] * A[value]
+    for i in range(0, docn):
+        ndj[i] = sqrt(ndj[i])
+        cos[i] = numerator[i] / (nq * ndj[i])
+    return cos
 
 
 def inverse_document_frequency(A, docn, n):
@@ -10,7 +52,7 @@ def inverse_document_frequency(A, docn, n):
     values = []
     for value in A.keys():
         idf = log(docn / nw[value[0]], 10)
-        if (idf != 0.0):
+        if idf != 0.0:
             A[value[0], value[1]] *= idf
         else:
             values.append(value)
@@ -60,9 +102,20 @@ input_line = input()
 input_line = input_line.split(" ")
 
 q = [0] * n
-for str in input_line:
+for spstr in input_line:
     try:
-        ind = words.index(str)
+        ind = words.index(spstr)
         q[ind] += 1
     except ValueError:
         pass
+
+cosphij = get_cor(A, n, docn, q)
+
+#
+print(cosphij)
+
+norm(A, n, docn, q)
+
+cosphij2 = get_cor2(A, n, docn, q)
+
+print(cosphij2)
